@@ -40,7 +40,7 @@ function NavbarComponent() {
           <Form className="d-flex">
             <Form.Control
               type="search"
-              placeholder="Buscar bebida"
+              placeholder="Buscar professor"
               className="me-2"
               aria-label="Buscar"
               value={searchTerm}

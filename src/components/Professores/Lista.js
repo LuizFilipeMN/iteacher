@@ -9,18 +9,18 @@ function ListaProfessores() {
   const busca = params.get('busca');
 
   const [professores, setProfessores] = useState([]);
-  const [alertMessageSuccess, setAlertMessageSucces] = useState('');
+  const [alertMessageSuccess, setAlertMessageSuccess] = useState('');
   const [alertMessageError, setAlertMessageError] = useState('');
 
   useEffect(() => {
-    api.get('professores/listar' + (busca ? `?busca=${busca}`: ''))
+    api.get('professores/listar' + (busca ? `?busca=${busca}` : ''))
       .then(response => {
         setProfessores(response.data);
       })
       .catch(error => {
         console.log(error);
       });
-  }, !busca ? [] : [busca]);
+  }, [busca]);
 
   const handleDelete = id => {
     api.delete('professores/' + id)
@@ -33,9 +33,9 @@ function ListaProfessores() {
           }, 1500);
         } else {
           setProfessores(prevProfessores => prevProfessores.filter(professor => professor.id !== id));
-          setAlertMessageSucces(message);
+          setAlertMessageSuccess(message);
           setTimeout(() => {
-            setAlertMessageSucces('');
+            setAlertMessageSuccess('');
           }, 1500);
         }
       })
@@ -62,7 +62,7 @@ function ListaProfessores() {
               <span className="material-icons fs-4">
                 add
               </span>
-              Cadastrar bebida
+              Cadastrar professor
             </div>
           </Link>
         </div>
@@ -74,9 +74,9 @@ function ListaProfessores() {
               <th style={{ width: "130px", minWidth: "130px", textAlign: "center" }}>Ações</th>
             </tr>
           </thead>
-          {professores.length > 0 ? (
-            <tbody>
-              {professores.map(professor => (
+          <tbody>
+            {professores.length > 0 ? (
+              professores.map(professor => (
                 <tr key={professor.id}>
                   <td>{professor.nome}</td>
                   <td>{professor.especialidade}</td>
@@ -118,21 +118,19 @@ function ListaProfessores() {
                     </Button>
                   </td>
                 </tr>
-              ))}
-            </tbody>
-          ) : (
-            <tbody>
+              ))
+            ) : (
               <tr>
-                <td colSpan={5} className="text-center">
+                <td colSpan={3} className="text-center">
                   Nenhum professor encontrado!
                 </td>
               </tr>
-            </tbody>
-          )}
+            )}
+          </tbody>
         </Table>
       </Card.Body>
     </Card>
   );
 }
 
-export default ListaProfessores;  
+export default ListaProfessores;

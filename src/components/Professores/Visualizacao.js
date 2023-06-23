@@ -17,13 +17,15 @@ const VisualizacaoProfessor = () => {
       });
   }, [id]);
 
-//   if (!professor) {
-//     window.location.href = '/professores';
-//   }
+  if (!professor) {
+    return (
+      <div className="text-center">Carregando...</div>
+    );
+  }
 
   return (
     <Card className="mx-auto mt-4" style={{ maxWidth: '800px' }}>
-      <Card.Header className=''>
+      <Card.Header className="">
         <Link to="/professores" style={{ position: 'absolute', marginTop: '5px', color: 'black' }}>
           <span className="material-icons">arrow_back</span>
         </Link>
@@ -40,9 +42,9 @@ const VisualizacaoProfessor = () => {
             </tr>
           </thead>
           <tbody>
-            <tr key={professor?.id}>
-              <td>{professor?.nome}</td>
-              <td>{professor?.especialidade}</td>
+            <tr key={professor.id}>
+              <td>{professor.nome}</td>
+              <td>{professor.especialidade}</td>
             </tr>
           </tbody>
         </Table>
