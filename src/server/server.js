@@ -169,7 +169,41 @@ app.post('/api/disciplinas/adicionar', (req, res) => {
     });
 });
 
-// EDITAR disciplina
+app.get('/api/disciplinas/editar/:id', (req, res) => {
+    Promise.all([
+        new Promise((resolve, reject) => {
+            db.query("SELECT * FROM professores", (err, result) => {
+                if (err) {
+                    console.log(err);
+                    reject("Erro ao listar professores");
+                } else {
+                    resolve(result);
+                }
+            });
+        }),
+        new Promise((resolve, reject) => {
+            const { id } = req.params;
+            console.log(id)
+            const query = "SELECT * FROM disciplinas WHERE id = ?";
+            db.query(query, [id], (err, result) => {
+                if (err) {
+                    console.log(err);
+                    reject("Erro ao buscar bebida");
+                } else {
+                    resolve(result[0]);
+                }
+            });
+        })
+    ])
+        .then(([professores, disciplina]) => {
+            res.json({ professores, disciplina });
+        })
+        .catch(error => {
+            console.log(error);
+            res.status(500).send("Erro ao obter os dados");
+        });
+});
+
 app.put('/api/disciplinas/editar/:id', (req, res) => {
     const { id } = req.params;
     const { nome, periodo, carga_horaria, professor_id } = req.body;    
