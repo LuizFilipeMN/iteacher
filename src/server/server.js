@@ -86,16 +86,13 @@ app.get('/api/professores/editar/:id', (req, res) => {
 });
 
 app.put('/api/professores/editar/:id', (req, res) => {
-    const {
-        id
-    } = req.params;
-    const {
-        nome,
-        especialidade
-    } = req.body;
+    const { id } = req.params;
+    const { nome, especialidade } = req.body;
 
-    const query = "UPDATE professores SET nome = ?, especialidade = ? WHERE id = ?";
-    db.query(query, [nome, especialidade, id], (err, result) => {
+    const updateProfessorQuery = "UPDATE professores SET nome = ?, especialidade = ? WHERE id = ?";
+    const updateDisciplinasQuery = "UPDATE disciplinas SET professor_nome = ? WHERE professor_id = ?";
+
+    db.query(updateProfessorQuery, [nome, especialidade, id], (err, result) => {
         if (err) {
             console.log(err);
             res.json({
@@ -103,9 +100,20 @@ app.put('/api/professores/editar/:id', (req, res) => {
                 message: "Não foi possível editar o professor!"
             });
         } else {
-            res.json({
-                status: "success",
-                message: "Professor editado com sucesso!"
+            // Atualizar o professor_nome nas disciplinas relacionadas
+            db.query(updateDisciplinasQuery, [nome, id], (err, result) => {
+                if (err) {
+                    console.log(err);
+                    res.json({
+                        status: "error",
+                        message: "Não foi possível atualizar as disciplinas relacionadas!"
+                    });
+                } else {
+                    res.json({
+                        status: "success",
+                        message: "Professor editado com sucesso!"
+                    });
+                }
             });
         }
     });
@@ -185,17 +193,17 @@ app.get("/api/disciplinas/listar", (req, res) => {
 
 app.get('/api/disciplinas/adicionar/', (req, res) => {
     Promise.all([
-            new Promise((resolve, reject) => {
-                db.query("SELECT * FROM professores", (err, result) => {
-                    if (err) {
-                        console.log(err);
-                        reject("Erro ao listar professores");
-                    } else {
-                        resolve(result);
-                    }
-                });
-            }),
-        ])
+        new Promise((resolve, reject) => {
+            db.query("SELECT * FROM professores", (err, result) => {
+                if (err) {
+                    console.log(err);
+                    reject("Erro ao listar professores");
+                } else {
+                    resolve(result);
+                }
+            });
+        }),
+    ])
         .then(([professores]) => {
             res.json({
                 professores
@@ -234,32 +242,32 @@ app.post('/api/disciplinas/adicionar', (req, res) => {
 
 app.get('/api/disciplinas/editar/:id', (req, res) => {
     Promise.all([
-            new Promise((resolve, reject) => {
-                db.query("SELECT * FROM professores", (err, result) => {
-                    if (err) {
-                        console.log(err);
-                        reject("Erro ao listar professores");
-                    } else {
-                        resolve(result);
-                    }
-                });
-            }),
-            new Promise((resolve, reject) => {
-                const {
-                    id
-                } = req.params;
-                console.log(id)
-                const query = "SELECT * FROM disciplinas WHERE id = ?";
-                db.query(query, [id], (err, result) => {
-                    if (err) {
-                        console.log(err);
-                        reject("Erro ao buscar bebida");
-                    } else {
-                        resolve(result[0]);
-                    }
-                });
-            })
-        ])
+        new Promise((resolve, reject) => {
+            db.query("SELECT * FROM professores", (err, result) => {
+                if (err) {
+                    console.log(err);
+                    reject("Erro ao listar professores");
+                } else {
+                    resolve(result);
+                }
+            });
+        }),
+        new Promise((resolve, reject) => {
+            const {
+                id
+            } = req.params;
+            console.log(id)
+            const query = "SELECT * FROM disciplinas WHERE id = ?";
+            db.query(query, [id], (err, result) => {
+                if (err) {
+                    console.log(err);
+                    reject("Erro ao buscar bebida");
+                } else {
+                    resolve(result[0]);
+                }
+            });
+        })
+    ])
         .then(([professores, disciplina]) => {
             res.json({
                 professores,
@@ -280,10 +288,11 @@ app.put('/api/disciplinas/editar/:id', (req, res) => {
         nome,
         periodo,
         carga_horaria,
-        professor_id
+        professor_id,
+        professor_nome
     } = req.body;
-    const query = "UPDATE disciplinas SET nome = ?, periodo = ?, carga_horaria = ?, professor_id = ? WHERE id = ?";
-    db.query(query, [nome, periodo, carga_horaria, professor_id, id], (err, result) => {
+    const query = "UPDATE disciplinas SET nome = ?, periodo = ?, carga_horaria = ?, professor_id = ?, professor_nome = ? WHERE id = ?";
+    db.query(query, [nome, periodo, carga_horaria, professor_id, professor_nome, id], (err, result) => {
         if (err) {
             console.log(err);
             res.status(500).send("Erro ao editar disciplina");

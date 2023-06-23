@@ -18,8 +18,9 @@ const FormularioProfessor = (props) => {
         if (props.action === 'editar') {
           api.get(`professores/editar/${id}`)
       .then(response => {
-        const professorData = response.data;
-        setProfessor(professorData);
+        const professor = response.data;
+        setProfessor(professor);
+        console.log(professor);
       })
       .catch(error => {
         console.log(error);
