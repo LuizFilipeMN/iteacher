@@ -48,13 +48,8 @@ app.get("/api/professores/listar", (req, res) => {
 
 //ADICIONAR PROFESSOR
 app.post('/api/professores/adicionar', (req, res) => {
-    const {
-        professor
-    } = req.body;
-    const {
-        nome,
-        especialidade
-    } = professor;
+    const { professor } = req.body;
+    const { nome, especialidade } = professor;
 
     const query = "INSERT INTO professores (nome, especialidade) VALUES (?, ?)";
     db.query(query, [nome, especialidade], (err, result) => {
@@ -275,7 +270,7 @@ app.get('/api/disciplinas/editar/:id', (req, res) => {
 
 app.put('/api/disciplinas/editar/:id', (req, res) => {
     const {
-        id
+        i
     } = req.params;
     const {
         nome,
