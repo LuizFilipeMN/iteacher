@@ -8,38 +8,40 @@ const FormularioDisciplina = (props) => {
   let { id } = useParams();
 
   const [professores, setProfessores] = useState([]);
-  const [disciplinas, setFormValues] = useState({
+  const [disciplina, setFormValues] = useState({
     nome: '',
     periodo: '',
     carga_horaria: '',
     professor_id: '',
-    professor_nome: ''
   });
-  const [alertMessage, setAlertMessage] = useState('');
-  const [isEditing, setIsEditing] = useState(false);
+  const [alertMessageSuccess, setAlertMessageSuccess] = useState('');
+  const [alertMessageError, setAlertMessageError] = useState('');
 
   useEffect(() => {
     if (props.action === 'adicionar') {
       api.get('disciplinas/adicionar')
-          .then(response => {
-              const { professores } = response.data;
-              setProfessores(professores);
-          })
-          .catch(error => {
-              console.log(error);
-          });
-  } else if (props.action === 'editar') {
+        .then(response => {
+          const { professores } = response.data;
+          setProfessores(professores);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    } else if (props.action === 'editar') {
       api.get(`disciplinas/editar/${id}`)
-          .then(response => {
-              const { bebida, professores } = response.data;
-              setFormValues(bebida);
-              setProfessores(professores);
-          })
-          .catch(error => {
-              console.log(error);
+        .then(response => {
+          const { disciplina, professores } = response.data;
+          setFormValues({
+            ...disciplina,
+            professor_nome: professores.find(p => p.id == disciplina.professor_id)?.nome || ''
           });
-  }
-}, [props.action, id]);
+          setProfessores(professores);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  }, [props.action, id]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -51,29 +53,53 @@ const FormularioDisciplina = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (isEditing) {
-      api.put(`/disciplinas/editar/${id}`, disciplinas)
+    let url = '/disciplinas/';
+    if (props.action === 'editar') {
+      api.put(url + 'editar/' + id, {
+        ...disciplina,
+        professor_nome: professores.find(p => p.id == disciplina.professor_id)?.nome || ''
+      })
+      // console.log(professor_nome)
         .then(response => {
-          setAlertMessage(response.data.message);
-          setTimeout(() => {
-            setAlertMessage('');
-            navigate('/disciplinas');
-          }, 1500);
+          const { status, message } = response.data;
+          if (status === 'error') {
+            setAlertMessageError(message);
+            setTimeout(() => {
+              setAlertMessageError('');
+            }, 1500);
+          } else {
+            setAlertMessageSuccess(message);
+            setTimeout(() => {
+              setAlertMessageSuccess('');
+              navigate('/disciplinas');
+            }, 1500);
+          }
         })
         .catch(error => {
-          console.log(error);
+          console.log(error)
         });
     } else {
-      api.post('/disciplinas/adicionar', disciplinas)
+      api.post(url + 'adicionar', {
+        ...disciplina,
+        professor_nome: professores.find(p => p.id == disciplina.professor_id)?.nome || ''
+      })
         .then(response => {
-          setAlertMessage(response.data.message);
-          setTimeout(() => {
-            setAlertMessage('');
-            navigate('/disciplinas');
-          }, 1500);
+          const { status, message } = response.data;
+          if (status === 'error') {
+            setAlertMessageError(message);
+            setTimeout(() => {
+              setAlertMessageError('');
+            }, 1500);
+          } else {
+            setAlertMessageSuccess(message);
+            setTimeout(() => {
+              setAlertMessageSuccess('');
+              navigate('/disciplinas');
+            }, 1500);
+          }
         })
         .catch(error => {
-          console.log(error);
+          console.log(error)
         });
     }
   };
@@ -85,12 +111,15 @@ const FormularioDisciplina = (props) => {
           <span className="material-icons">arrow_back</span>
         </Link>
         <div className="text-center">
-          <h4>{isEditing ? 'Editar' : 'Adicionar'} Disciplina</h4>
+          <h4>{props.action === 'editar' ? 'Editar' : 'Adicionar'} disciplina</h4>
         </div>
       </Card.Header>
       <Card.Body>
-        {alertMessage && (
-          <div className="alert alert-success">{alertMessage}</div>
+        {alertMessageSuccess && (
+          <div className="alert alert-success">{alertMessageSuccess}</div>
+        )}
+        {alertMessageError && (
+          <div className="alert alert-danger">{alertMessageError}</div>
         )}
         <Form onSubmit={handleSubmit}>
           <Form.Group controlId="nome">
@@ -98,16 +127,34 @@ const FormularioDisciplina = (props) => {
             <Form.Control
               type="text"
               name="nome"
-              value={disciplinas.nome}
+              value={disciplina.nome}
+              onChange={handleInputChange}
+            />
+          </Form.Group>
+          <Form.Group controlId="periodo">
+            <Form.Label>Período</Form.Label>
+            <Form.Control
+              type="text"
+              name="periodo"
+              value={disciplina.periodo}
+              onChange={handleInputChange}
+            />
+          </Form.Group>
+          <Form.Group controlId="carga_horaria">
+            <Form.Label>Carga Horária</Form.Label>
+            <Form.Control
+              type="text"
+              name="carga_horaria"
+              value={disciplina.carga_horaria}
               onChange={handleInputChange}
             />
           </Form.Group>
           <Form.Group controlId="professor_id">
-            <Form.Label>Professores</Form.Label>
+            <Form.Label>Professor</Form.Label>
             <Form.Control
               as="select"
               name="professor_id"
-              value={disciplinas.professor_id}
+              value={disciplina.professor_id}
               onChange={handleInputChange}
             >
               <option value="">Selecione um professor</option>

@@ -15,15 +15,15 @@ const FormularioProfessor = (props) => {
   const [alertMessageError, setAlertMessageError] = useState('');
 
   useEffect(() => {
-    if (props.action === 'editar') {
-      api.get(`professores/editar/${id}`)
-        .then(response => {
-          const { professor } = response.data;
-          setProfessor(professor);
-        })
-        .catch(error => {
-          console.log(error);
-        });
+        if (props.action === 'editar') {
+          api.get(`professores/editar/${id}`)
+      .then(response => {
+        const professorData = response.data;
+        setProfessor(professorData);
+      })
+      .catch(error => {
+        console.log(error);
+      });
     }
   }, [props.action, id]);
 
@@ -62,6 +62,8 @@ const FormularioProfessor = (props) => {
           console.log(error)
         });
     } else {
+      console.log('entrou')
+      console.log(professor)
       api.post(url + 'adicionar', {
         professor,
       })

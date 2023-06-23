@@ -48,13 +48,8 @@ app.get("/api/professores/listar", (req, res) => {
 
 //ADICIONAR PROFESSOR
 app.post('/api/professores/adicionar', (req, res) => {
-    const {
-        professor
-    } = req.body;
-    const {
-        nome,
-        especialidade
-    } = professor;
+    const { professor } = req.body;
+    const { nome, especialidade } = professor;
 
     const query = "INSERT INTO professores (nome, especialidade) VALUES (?, ?)";
     db.query(query, [nome, especialidade], (err, result) => {
@@ -214,11 +209,15 @@ app.get('/api/disciplinas/adicionar/', (req, res) => {
 
 app.post('/api/disciplinas/adicionar', (req, res) => {
     const {
-        nome
+        nome,
+        periodo,
+        carga_horaria,
+        professor_id,
+        professor_nome
     } = req.body;
 
-    const query = "INSERT INTO disciplinas (nome) VALUES (?)";
-    db.query(query, [nome], (err, result) => {
+    const query = "INSERT INTO disciplinas (nome, periodo, carga_horaria, professor_id, professor_nome) VALUES (?, ?, ?, ?, ?)";
+    db.query(query, [nome, periodo, carga_horaria, professor_id, professor_nome], (err, result) => {
         if (err) {
             console.log(err);
             res.status(500).send("Erro ao adicionar disciplina");
@@ -352,6 +351,7 @@ app.delete('/api/disciplinas/:id', (req, res) => {
     });
 });
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 app.listen(PORT, () => {
     console.log(`Servidor Express iniciado na porta ${PORT}`);

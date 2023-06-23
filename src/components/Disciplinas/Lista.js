@@ -78,7 +78,7 @@ function ListaDisciplinas() {
                 <td>{disciplina.nome}</td>
                 <td>{disciplina.periodo}</td>
                 <td>{disciplina.carga_horaria}</td>
-                <td>{disciplina.professor}</td>
+                <td>{disciplina.professor_nome}</td>
                 <td className="d-flex justify-content-around">
                   <Link
                     className="btn btn-primary"
