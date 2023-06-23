@@ -35,7 +35,7 @@ function NavbarComponent() {
             navbarScroll
           >
             <Nav.Link href="/professores">Professores</Nav.Link>
-            <Nav.Link href="/categorias">Categorias</Nav.Link>
+            <Nav.Link href="/disciplinas">Disciplinas</Nav.Link>
           </Nav>
           <Form className="d-flex">
             <Form.Control

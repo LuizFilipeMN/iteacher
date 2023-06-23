@@ -12,11 +12,6 @@ import AdicionarDisciplina from './views/Disciplinas/Adicionar';
 import EditarDisciplina from './views/Disciplinas/Editar';
 import VisualizarDisciplina from './views/Disciplinas/Visualizar';
 
-// import ListarFabricantes from './views/Fabricantes/Listar';
-// import AdicionarFabricante from './views/Fabricantes/Adicionar';
-// import EditarFabricante from './views/Fabricantes/Editar';
-// import VisualizarFabricante from './views/Fabricantes/Visualizar';
-
 const Router = () => {
   return (
     <Routes>
@@ -32,11 +27,7 @@ const Router = () => {
         <Route path="/disciplinas/adicionar" element={<AdicionarDisciplina />} />
         <Route path="/disciplinas/editar/:id" element={<EditarDisciplina />} />
         <Route path="/disciplinas/visualizar/:id" element={<VisualizarDisciplina />} />
-        {/* Rotas FABRICANTES */}
-        {/* <Route path="/fabricantes" element={<ListarFabricantes />} />
-        <Route path="/fabricantes/adicionar" element={<AdicionarFabricante />} />
-        <Route path="/fabricantes/editar/:id" element={<EditarFabricante />} />
-        <Route path="/fabricantes/visualizar/:id" element={<VisualizarFabricante />} /> */}
+
       </Route>
     </Routes>
   );

@@ -3,19 +3,19 @@ import { Card, Button, Table } from 'react-bootstrap';
 import { Link, useLocation } from 'react-router-dom';
 import api from '../../service/api';
 
-function ListaBebidas() {
+function ListaProfessores() {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const busca = params.get('busca');
 
-  const [bebidas, setBebidas] = useState([]);
+  const [professores, setProfessores] = useState([]);
   const [alertMessageSuccess, setAlertMessageSucces] = useState('');
   const [alertMessageError, setAlertMessageError] = useState('');
 
   useEffect(() => {
-    api.get('bebidas/listar' + (busca ? `?busca=${busca}`: ''))
+    api.get('professores/listar' + (busca ? `?busca=${busca}`: ''))
       .then(response => {
-        setBebidas(response.data);
+        setProfessores(response.data);
       })
       .catch(error => {
         console.log(error);
@@ -23,7 +23,7 @@ function ListaBebidas() {
   }, !busca ? [] : [busca]);
 
   const handleDelete = id => {
-    api.delete('bebidas/' + id)
+    api.delete('professores/' + id)
       .then(response => {
         const { status, message } = response.data;
         if (status === 'error') {
@@ -32,7 +32,7 @@ function ListaBebidas() {
             setAlertMessageError('');
           }, 1500);
         } else {
-          setBebidas(prevBebidas => prevBebidas.filter(bebida => bebida.id !== id));
+          setProfessores(prevProfessores => prevProfessores.filter(professor => professor.id !== id));
           setAlertMessageSucces(message);
           setTimeout(() => {
             setAlertMessageSucces('');
@@ -47,7 +47,7 @@ function ListaBebidas() {
   return (
     <Card className="mx-auto mt-4" style={{ maxWidth: '800px' }}>
       <Card.Header className="text-center">
-        <h4>Lista de Bebidas</h4>
+        <h4>Lista de Professores</h4>
       </Card.Header>
       <Card.Body>
         {alertMessageSuccess && (
@@ -57,7 +57,7 @@ function ListaBebidas() {
           <div className="alert alert-danger">{alertMessageError}</div>
         )}
         <div className="text-right mb-3">
-          <Link to="/bebidas/adicionar" className="btn btn-warning" size="lg">
+          <Link to="/professores/adicionar" className="btn btn-warning" size="lg">
             <div className="d-flex align-items-center">
               <span className="material-icons fs-4">
                 add
@@ -70,22 +70,20 @@ function ListaBebidas() {
           <thead>
             <tr>
               <th>Nome</th>
-              <th>Descrição</th>
-              <th>Categoria</th>
+              <th>Especialidade</th>
               <th style={{ width: "130px", minWidth: "130px", textAlign: "center" }}>Ações</th>
             </tr>
           </thead>
-          {bebidas.length > 0 ? (
+          {professores.length > 0 ? (
             <tbody>
-              {bebidas.map(bebida => (
-                <tr key={bebida.id}>
-                  <td>{bebida.nome}</td>
-                  <td>{bebida.descricao}</td>
-                  <td>{bebida.categoria_nome}</td>
+              {professores.map(professor => (
+                <tr key={professor.id}>
+                  <td>{professor.nome}</td>
+                  <td>{professor.especialidade}</td>
                   <td className='d-flex justify-content-around'>
                     <Link
                       className="btn btn-primary"
-                      to={'/bebidas/visualizar/' + bebida.id}
+                      to={'/professores/visualizar/' + professor.id}
                       variant="primary"
                       style={{ width: "30px", height: "30px" }}
                     >
@@ -97,7 +95,7 @@ function ListaBebidas() {
                     </Link>
                     <Link
                       className='btn btn-warning'
-                      to={'/bebidas/editar/' + bebida.id}
+                      to={'/professores/editar/' + professor.id}
                       style={{ width: "30px", height: "30px" }}
                       variant="warning"
                     >
@@ -110,7 +108,7 @@ function ListaBebidas() {
                     <Button
                       variant="danger"
                       style={{ width: "30px", height: "30px" }}
-                      onClick={() => handleDelete(bebida.id)}
+                      onClick={() => handleDelete(professor.id)}
                     >
                       <div className='d-flex justify-content-center'>
                         <span className='material-icons fs-5 text-dark'>
@@ -126,7 +124,7 @@ function ListaBebidas() {
             <tbody>
               <tr>
                 <td colSpan={5} className="text-center">
-                  Nenhuma bebida encontrada!
+                  Nenhum professor encontrado!
                 </td>
               </tr>
             </tbody>
@@ -137,4 +135,4 @@ function ListaBebidas() {
   );
 }
 
-export default ListaBebidas;  
+export default ListaProfessores;  

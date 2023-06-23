@@ -3,28 +3,28 @@ import { Card, Table } from 'react-bootstrap';
 import { useParams, Link } from 'react-router-dom';
 import api from '../../service/api';
 
-const VisualizacaoBebida = () => {
+const VisualizacaoProfessor = () => {
   const { id } = useParams();
-  const [bebida, setBebida] = useState(null);
+  const [professor, setProfessor] = useState(null);
 
   useEffect(() => {
-    api.get(`bebidas/visualizar/${id}`)
+    api.get(`professores/visualizar/${id}`)
       .then(response => {
-        setBebida(response.data);
+        setProfessor(response.data);
       })
       .catch(error => {
         console.log(error);
       });
   }, [id]);
 
-//   if (!bebida) {
-//     window.location.href = '/bebidas';
+//   if (!professor) {
+//     window.location.href = '/professores';
 //   }
 
   return (
     <Card className="mx-auto mt-4" style={{ maxWidth: '800px' }}>
       <Card.Header className=''>
-        <Link to="/bebidas" style={{ position: 'absolute', marginTop: '5px', color: 'black' }}>
+        <Link to="/professores" style={{ position: 'absolute', marginTop: '5px', color: 'black' }}>
           <span className="material-icons">arrow_back</span>
         </Link>
         <div className="text-center">
@@ -36,15 +36,13 @@ const VisualizacaoBebida = () => {
           <thead>
             <tr>
               <th>Nome</th>
-              <th>Descrição</th>
-              <th>Categoria</th>
+              <th>Especialidade</th>
             </tr>
           </thead>
           <tbody>
-            <tr key={bebida?.id}>
-              <td>{bebida?.nome}</td>
-              <td>{bebida?.descricao}</td>
-              <td>{bebida?.categoria_nome}</td>
+            <tr key={professor?.id}>
+              <td>{professor?.nome}</td>
+              <td>{professor?.especialidade}</td>
             </tr>
           </tbody>
         </Table>
@@ -53,4 +51,4 @@ const VisualizacaoBebida = () => {
   );
 };
 
-export default VisualizacaoBebida;
+export default VisualizacaoProfessor;
