@@ -26,7 +26,7 @@ function NavbarComponent() {
   return (
     <Navbar expand="lg" bg="dark" data-bs-theme="dark">
       <Container fluid>
-        <Navbar.Brand href="#" className='text-warning'><span className="material-icons fs-2">sports_bar</span></Navbar.Brand>
+        <Navbar.Brand href="#" className='text-warning'><span className="material-icons fs-2">school</span></Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
           <Nav

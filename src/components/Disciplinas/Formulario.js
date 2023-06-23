@@ -3,32 +3,47 @@ import { Card, Form, Button } from 'react-bootstrap';
 import api from '../../service/api';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
-const FormularioDisciplina = () => {
+const FormularioDisciplina = (props) => {
   const navigate = useNavigate();
   let { id } = useParams();
 
-  const [disciplinas, setDisciplinas] = useState({
+  const [professores, setProfessores] = useState([]);
+  const [disciplinas, setFormValues] = useState({
     nome: '',
+    periodo: '',
+    carga_horaria: '',
+    professor_id: '',
+    professor_nome: ''
   });
   const [alertMessage, setAlertMessage] = useState('');
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    if (id) {
-      setIsEditing(true);
-      api.get(`/disciplinas/visualizar/${id}`)
-        .then(response => {
-          setDisciplinas(response.data);
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    }
-  }, [id]);
+    if (props.action === 'adicionar') {
+      api.get('disciplinas/adicionar')
+          .then(response => {
+              const { professores } = response.data;
+              setProfessores(professores);
+          })
+          .catch(error => {
+              console.log(error);
+          });
+  } else if (props.action === 'editar') {
+      api.get(`disciplinas/editar/${id}`)
+          .then(response => {
+              const { bebida, professores } = response.data;
+              setFormValues(bebida);
+              setProfessores(professores);
+          })
+          .catch(error => {
+              console.log(error);
+          });
+  }
+}, [props.action, id]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setDisciplinas((prevState) => ({
+    setFormValues((prevState) => ({
       ...prevState,
       [name]: value,
     }));
@@ -86,6 +101,22 @@ const FormularioDisciplina = () => {
               value={disciplinas.nome}
               onChange={handleInputChange}
             />
+          </Form.Group>
+          <Form.Group controlId="professor_id">
+            <Form.Label>Professores</Form.Label>
+            <Form.Control
+              as="select"
+              name="professor_id"
+              value={disciplinas.professor_id}
+              onChange={handleInputChange}
+            >
+              <option value="">Selecione um professor</option>
+              {professores.map((professor) => (
+                <option key={professor.id} value={professor.id}>
+                  {professor.nome}
+                </option>
+              ))}
+            </Form.Control>
           </Form.Group>
           <Button variant="warning" type="submit" className='mt-3'>
             Salvar
