@@ -10,9 +10,9 @@ function NavbarComponent() {
 
   const handleSearch = () => {
     if (searchTerm === '') {
-      window.location.href = '/bebidas';
+      window.location.href = '/professores';
     } else {
-      window.location.href = `/bebidas?busca=${encodeURIComponent(searchTerm)}`;
+      window.location.href = `/professores?busca=${encodeURIComponent(searchTerm)}`;
     }
   };
 
@@ -34,7 +34,7 @@ function NavbarComponent() {
             style={{ maxHeight: '180px' }}
             navbarScroll
           >
-            <Nav.Link href="/bebidas">Bebidas</Nav.Link>
+            <Nav.Link href="/professores">Professores</Nav.Link>
             <Nav.Link href="/categorias">Categorias</Nav.Link>
           </Nav>
           <Form className="d-flex">

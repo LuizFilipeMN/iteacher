@@ -3,37 +3,24 @@ import { Card, Form, Button } from 'react-bootstrap';
 import api from '../../service/api';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 
-const FormularioBebida = (props) => {
+const FormularioProfessor = (props) => {
     let id = useParams().id;
     const navigate = useNavigate();
 
-    const [categorias, setCategorias] = useState([]);
-    const [bebida, setFormValues] = useState({
+    const [professor, setFormValues] = useState({
         nome: '',
-        descricao: '',
-        categoria: '',
-        categoria_nome: '',
-        teor_alcoolico: '',
+        especialidade:'',
     });
     const [alertMessageSuccess, setAlertMessageSucces] = useState('');
     const [alertMessageError, setAlertMessageError] = useState('');
 
     useEffect(() => {
-        if (props.action === 'adicionar') {
-            api.get('bebidas/adicionar')
+
+        if (props.action === 'editar') {
+            api.get(`professores/editar/${id}`)
                 .then(response => {
-                    const { categorias } = response.data;
-                    setCategorias(categorias);
-                })
-                .catch(error => {
-                    console.log(error);
-                });
-        } else if (props.action === 'editar') {
-            api.get(`bebidas/editar/${id}`)
-                .then(response => {
-                    const { bebida, categorias } = response.data;
-                    setFormValues(bebida);
-                    setCategorias(categorias);
+                    const { professor } = response.data;
+                    setFormValues(professor);
                 })
                 .catch(error => {
                     console.log(error);
@@ -45,18 +32,16 @@ const FormularioBebida = (props) => {
         const { name, value } = e.target;
         setFormValues(prevState => ({
             ...prevState,
-            [name]: value,
-            categoria_id: name === 'categoria' ? e.target.value : prevState.categoria_id,
-            categoria_nome: name === 'categoria' ? e.target.options[e.target.selectedIndex].text : prevState.categoria_nome,
+            [name]: value
         }));
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        let url = '/bebidas/';
+        let url = '/professores/';
         if (props.action === 'editar') {
             api.put(url + 'editar/' + id, {
-                bebida,
+                professor,
             })
                 .then(response => {
                     const { status, message } = response.data;
@@ -69,7 +54,7 @@ const FormularioBebida = (props) => {
                         setAlertMessageSucces(message);
                         setTimeout(() => {
                             setAlertMessageSucces('');
-                            navigate('/bebidas');
+                            navigate('/professores');
                         }, 1500);
                     }
                 })
@@ -78,7 +63,7 @@ const FormularioBebida = (props) => {
                 });
         } else {
             api.post(url + 'adicionar', {
-                bebida,
+                professor,
             })
                 .then(response => {
                     const { status, message } = response.data;
@@ -91,7 +76,7 @@ const FormularioBebida = (props) => {
                         setAlertMessageSucces(message);
                         setTimeout(() => {
                             setAlertMessageSucces('');
-                            navigate('/bebidas');
+                            navigate('/professores');
                         }, 1500);
                     }
                 })
@@ -104,11 +89,11 @@ const FormularioBebida = (props) => {
     return (
         <Card className="mx-auto mt-4" style={{ maxWidth: '800px' }}>
             <Card.Header className=''>
-                <Link to="/bebidas" style={{ position: 'absolute', marginTop: '5px', color: 'black' }}>
+                <Link to="/professores" style={{ position: 'absolute', marginTop: '5px', color: 'black' }}>
                     <span className="material-icons">arrow_back</span>
                 </Link>
                 <div className="text-center">
-                    <h4>{props.action === 'editar' ? 'Editar' : 'Adicionar'} bebida</h4>
+                    <h4>{props.action === 'editar' ? 'Editar' : 'Adicionar'} professor</h4>
                 </div>
             </Card.Header>
             <Card.Body>
@@ -124,39 +109,16 @@ const FormularioBebida = (props) => {
                         <Form.Control
                             type="text"
                             name="nome"
-                            value={bebida.nome || ''}
+                            value={professor.nome || ''}
                             onChange={handleInputChange}
                         />
                     </Form.Group>
-                    <Form.Group controlId="descricao" className='mt-2'>
-                        <Form.Label>Descrição</Form.Label>
+                    <Form.Group controlId="especialidade" className='mt-2'>
+                        <Form.Label>Especialidade</Form.Label>
                         <Form.Control
                             as="textarea"
-                            name="descricao"
-                            value={bebida.descricao || ''}
-                            onChange={handleInputChange}
-                        />
-                    </Form.Group>
-                    <Form.Group controlId="categoria" className='mt-2'>
-                        <Form.Label>Categoria</Form.Label>
-                        <Form.Control
-                            as="select"
-                            name="categoria"
-                            value={bebida.categoria || ''}
-                            onChange={handleInputChange}
-                        >
-                            <option value="">Selecione uma categoria</option>
-                            {categorias.map(categoria => (
-                                <option key={categoria.id} value={categoria.id}>{categoria.nome}</option>
-                            ))}
-                        </Form.Control>
-                    </Form.Group>
-                    <Form.Group controlId="teor_alcoolico" className='mt-2'>
-                        <Form.Label>Teor alcóolico (%)</Form.Label>
-                        <Form.Control
-                            type="text"
-                            name="teor_alcoolico"
-                            value={bebida.teor_alcoolico || ''}
+                            name="especialidade"
+                            value={professor.especialidade || ''}
                             onChange={handleInputChange}
                         />
                     </Form.Group>
@@ -169,4 +131,4 @@ const FormularioBebida = (props) => {
     );
 };
 
-export default FormularioBebida;
+export default FormularioProfessor;
