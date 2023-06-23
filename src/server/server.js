@@ -187,6 +187,31 @@ app.get("/api/disciplinas/listar", (req, res) => {
 });
 
 // ADICIONAR DISCIPLINA
+
+app.get('/api/disciplinas/adicionar/', (req, res) => {
+    Promise.all([
+            new Promise((resolve, reject) => {
+                db.query("SELECT * FROM professores", (err, result) => {
+                    if (err) {
+                        console.log(err);
+                        reject("Erro ao listar professores");
+                    } else {
+                        resolve(result);
+                    }
+                });
+            }),
+        ])
+        .then(([professores]) => {
+            res.json({
+                professores
+            });
+        })
+        .catch(error => {
+            console.log(error);
+            res.status(500).send("Erro ao obter os dados");
+        });
+});
+
 app.post('/api/disciplinas/adicionar', (req, res) => {
     const {
         nome
@@ -205,6 +230,8 @@ app.post('/api/disciplinas/adicionar', (req, res) => {
         }
     });
 });
+
+// EDITAR DISCIPLINA
 
 app.get('/api/disciplinas/editar/:id', (req, res) => {
     Promise.all([
