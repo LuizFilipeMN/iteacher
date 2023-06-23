@@ -1,11 +1,11 @@
-import ListaCategorias from "../../components/Categorias/Lista";
+import ListaDisciplinas from "../../components/Disciplinas/Lista";
 
-function ListarCategorias(){
+function ListarDisciplinas(){
     return (
         <div>
-            <ListaCategorias />
+            <ListaDisciplinas />
         </div>
     );
 };
 
-export default ListarCategorias;
+export default ListarDisciplinas;

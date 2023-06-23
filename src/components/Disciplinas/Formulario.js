@@ -3,11 +3,11 @@ import { Card, Form, Button } from 'react-bootstrap';
 import api from '../../service/api';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
-const FormularioCategoria = () => {
+const FormularioDisciplina = () => {
   const navigate = useNavigate();
   let { id } = useParams();
 
-  const [categorias, setCategorias] = useState({
+  const [disciplinas, setDisciplinas] = useState({
     nome: '',
   });
   const [alertMessage, setAlertMessage] = useState('');
@@ -16,9 +16,9 @@ const FormularioCategoria = () => {
   useEffect(() => {
     if (id) {
       setIsEditing(true);
-      api.get(`/categorias/visualizar/${id}`)
+      api.get(`/disciplinas/visualizar/${id}`)
         .then(response => {
-          setCategorias(response.data);
+          setDisciplinas(response.data);
         })
         .catch(error => {
           console.log(error);
@@ -28,7 +28,7 @@ const FormularioCategoria = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setCategorias((prevState) => ({
+    setDisciplinas((prevState) => ({
       ...prevState,
       [name]: value,
     }));
@@ -37,24 +37,24 @@ const FormularioCategoria = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (isEditing) {
-      api.put(`/categorias/editar/${id}`, categorias)
+      api.put(`/disciplinas/editar/${id}`, disciplinas)
         .then(response => {
           setAlertMessage(response.data.message);
           setTimeout(() => {
             setAlertMessage('');
-            navigate('/categorias');
+            navigate('/disciplinas');
           }, 1500);
         })
         .catch(error => {
           console.log(error);
         });
     } else {
-      api.post('/categorias/adicionar', categorias)
+      api.post('/disciplinas/adicionar', disciplinas)
         .then(response => {
           setAlertMessage(response.data.message);
           setTimeout(() => {
             setAlertMessage('');
-            navigate('/categorias');
+            navigate('/disciplinas');
           }, 1500);
         })
         .catch(error => {
@@ -66,11 +66,11 @@ const FormularioCategoria = () => {
   return (
     <Card className="mx-auto mt-4" style={{ maxWidth: '800px' }}>
       <Card.Header className=''>
-        <Link to="/categorias" style={{ position: 'absolute', marginTop: '5px', color: 'black' }}>
+        <Link to="/disciplinas" style={{ position: 'absolute', marginTop: '5px', color: 'black' }}>
           <span className="material-icons">arrow_back</span>
         </Link>
         <div className="text-center">
-          <h4>{isEditing ? 'Editar' : 'Adicionar'} Categoria</h4>
+          <h4>{isEditing ? 'Editar' : 'Adicionar'} Disciplina</h4>
         </div>
       </Card.Header>
       <Card.Body>
@@ -83,7 +83,7 @@ const FormularioCategoria = () => {
             <Form.Control
               type="text"
               name="nome"
-              value={categorias.nome}
+              value={disciplinas.nome}
               onChange={handleInputChange}
             />
           </Form.Group>
@@ -96,4 +96,4 @@ const FormularioCategoria = () => {
   );
 };
 
-export default FormularioCategoria;
+export default FormularioDisciplina;

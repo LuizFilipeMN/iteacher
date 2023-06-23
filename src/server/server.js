@@ -142,7 +142,7 @@ app.delete('/api/professores/:id', (req, res) => {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// LISTAR CATEGORIAS
+// LISTAR DISCIPLINAS
 app.get("/api/disciplinas/listar", (req, res) => {
     db.query("SELECT * FROM disciplinas", (err, result) => {
         if (err) {
@@ -154,7 +154,7 @@ app.get("/api/disciplinas/listar", (req, res) => {
     });
 });
 
-// ADICIONAR CATEGORIA
+// ADICIONAR DISCIPLINA
 app.post('/api/disciplinas/adicionar', (req, res) => {
     const { nome } = req.body;
 
@@ -194,7 +194,7 @@ app.get('/api/disciplinas/visualizar/:id', (req, res) => {
             res.status(500).send("Erro ao visualizar disciplina");
         } else {
             if (result.length === 0) {
-                res.status(404).send("Categoria não encontrada");
+                res.status(404).send("DISCIPLINA não encontrada");
             } else {
                 res.send(result[0]);
             }
@@ -202,7 +202,7 @@ app.get('/api/disciplinas/visualizar/:id', (req, res) => {
     });
 });
 
-// DELETAR CATEGORIA
+// DELETAR DISCIPLINA
 app.delete('/api/disciplinas/:id', (req, res) => {
     const { id } = req.params;
     const queryDelete = "DELETE FROM disciplinas WHERE id = ?";

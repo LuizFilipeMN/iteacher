@@ -1,11 +1,11 @@
-import FormularioCategoria from "../../components/Categorias/Formulario";
+import FormularioDisciplina from "../../components/Disciplinas/Formulario";
 
-const EditarCategoria = () => {
+const EditarDisciplina = () => {
     return (
         <div>
-            <FormularioCategoria action="editar"/>
+            <FormularioDisciplina action="editar"/>
         </div>
     );
 };
 
-export default EditarCategoria;
+export default EditarDisciplina;

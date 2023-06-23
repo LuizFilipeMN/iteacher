@@ -1,11 +1,11 @@
-import VisualizacaoCategoria from "../../components/Categorias/Visualizacao";
+import VisualizacaoDisciplina from "../../components/Disciplinas/Visualizacao";
 
-const VisualizarCategoria = () => {
+const VisualizarDisciplina = () => {
     return (
         <div>
-            <VisualizacaoCategoria />
+            <VisualizacaoDisciplina />
         </div>
     );
 };
 
-export default VisualizarCategoria;
+export default VisualizarDisciplina;

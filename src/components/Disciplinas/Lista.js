@@ -3,15 +3,15 @@ import { Card, Button, Table } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import api from '../../service/api';
 
-function ListaCategorias() {
-  const [categorias, setCategorias] = useState([]);
+function ListaDisciplinas() {
+  const [disciplinas, setDisciplinas] = useState([]);
   const [alertMessageError, setAlertMessageError] = useState('');
   const [alertMessageSuccess, setAlertMessageSuccess] = useState('');
 
   useEffect(() => {
-    api.get('categorias/listar')
+    api.get('disciplinas/listar')
       .then(response => {
-        setCategorias(response.data)
+        setDisciplinas(response.data)
         console.log(response);
       })
       .catch(error => {
@@ -20,7 +20,7 @@ function ListaCategorias() {
   }, []);
 
   const handleDelete = id => {
-    api.delete('categorias/' + id)
+    api.delete('disciplinas/' + id)
       .then(response => {
         const { status, message } = response.data;
         if (status === 'error') {
@@ -29,8 +29,8 @@ function ListaCategorias() {
             setAlertMessageError('');
           }, 1500);
         } else {
-          // Remove a categoria excluída do estado categorias
-          setCategorias(prevCategorias => prevCategorias.filter(categoria => categoria.id !== id));
+          // Remove a disciplina excluída do estado disciplinas
+          setDisciplinas(prevDisciplinas => prevDisciplinas.filter(disciplina => disciplina.id !== id));
           setAlertMessageSuccess(message);
           setTimeout(() => {
             setAlertMessageSuccess('');
@@ -45,7 +45,7 @@ function ListaCategorias() {
   return (
     <Card className="mx-auto mt-4" style={{ maxWidth: '800px' }}>
       <Card.Header className="text-center">
-        <h4>Lista de Categorias</h4>
+        <h4>Lista de Disciplinas</h4>
       </Card.Header>
       <Card.Body>
         {alertMessageError && (
@@ -55,10 +55,10 @@ function ListaCategorias() {
           <div className="alert alert-success">{alertMessageSuccess}</div>
         )}
         <div className="text-right mb-3">
-          <Link to="/categorias/adicionar" className="btn btn-warning" size="lg">
+          <Link to="/disciplinas/adicionar" className="btn btn-warning" size="lg">
             <div className="d-flex align-items-center">
               <span className="material-icons fs-4">add</span>
-              Cadastrar categoria
+              Cadastrar disciplina
             </div>
           </Link>
         </div>
@@ -66,17 +66,23 @@ function ListaCategorias() {
           <thead>
             <tr>
               <th>Nome</th>
+              <th>Período</th>
+              <th>Carga horária</th>
+              <th>Professor</th>
               <th style={{ width: '130px', minWidth: '130px', textAlign: 'center' }}>Ações</th>
             </tr>
           </thead>
           <tbody>
-            {categorias.map(categoria => (
-              <tr key={categoria.id}>
-                <td>{categoria.nome}</td>
+            {disciplinas.map(disciplina => (
+              <tr key={disciplina.id}>
+                <td>{disciplina.nome}</td>
+                <td>{disciplina.periodo}</td>
+                <td>{disciplina.carga_horaria}</td>
+                <td>{disciplina.professor}</td>
                 <td className="d-flex justify-content-around">
                   <Link
                     className="btn btn-primary"
-                    to={`/categorias/visualizar/${categoria.id}`}
+                    to={`/disciplinas/visualizar/${disciplina.id}`}
                     variant="primary"
                     style={{ width: '30px', height: '30px' }}
                   >
@@ -86,7 +92,7 @@ function ListaCategorias() {
                   </Link>
                   <Link
                     className="btn btn-warning"
-                    to={`/categorias/editar/${categoria.id}`}
+                    to={`/disciplinas/editar/${disciplina.id}`}
                     style={{ width: '30px', height: '30px' }}
                     variant="warning"
                   >
@@ -97,7 +103,7 @@ function ListaCategorias() {
                   <Button
                     variant="danger"
                     style={{ width: '30px', height: '30px' }}
-                    onClick={() => handleDelete(categoria.id)}
+                    onClick={() => handleDelete(disciplina.id)}
                   >
                     <div className="d-flex justify-content-center">
                       <span className="material-icons fs-5 text-dark">clear</span>
@@ -113,4 +119,4 @@ function ListaCategorias() {
   );
 }
 
-export default ListaCategorias;
+export default ListaDisciplinas;
