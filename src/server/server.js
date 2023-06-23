@@ -16,7 +16,7 @@ db.connect(function (err) {
     }
 });
 
-// LISTAR
+// LISTAR PROFESSOR
 app.get("/api/professores/listar", (req, res) => {
     const { busca } = req.query;
 
@@ -44,7 +44,7 @@ app.get("/api/professores/listar", (req, res) => {
     }
 });
 
-
+//ADICIONAR PROFESSOR
 app.post('/api/professores/adicionar', (req, res) => {
     const { professor } = req.body;
     const { nome, especialidade } = professor;
@@ -60,7 +60,7 @@ app.post('/api/professores/adicionar', (req, res) => {
     });
 });
 
-//EDITAR
+//EDITAR PROFESSOR
 app.get('/api/professores/editar/:id', (req, res) => {
     Promise.all([
         new Promise((resolve, reject) => {
@@ -100,7 +100,7 @@ app.put('/api/professores/editar/:id', (req, res) => {
     });
 });
 
-// VISUALIZAR
+// VISUALIZAR PROFESSOR
 app.get('/api/professores/visualizar/:id', (req, res) => {
     const { id } = req.params;
     const query = "SELECT * FROM professores WHERE id = ?";
@@ -117,35 +117,37 @@ app.get('/api/professores/visualizar/:id', (req, res) => {
         }
     });
 });
-// DELETAR
-app.delete('/api/bebidas/:id', (req, res) => {
+// DELETAR PROFESSOR
+app.delete('/api/professores/:id', (req, res) => {
     const { id } = req.params;
-    const queryDelete = "DELETE FROM bebidas WHERE id = ?";
-    const querySelectAll = "SELECT * FROM bebidas";
+    const queryDelete = "DELETE FROM professores WHERE id = ?";
+    const querySelectAll = "SELECT * FROM professores";
 
     db.query(queryDelete, [id], (err, result) => {
         if (err) {
             console.log(err);
-            res.json({ status: "error", message: "Não foi possível excluir a bebida!" });
+            res.json({ status: "error", message: "Não foi possível excluir o professor!" });
         } else {
             db.query(querySelectAll, (err, result) => {
                 if (err) {
                     console.log(err);
-                    res.json({ status: "error", message: "Não foi possível excluir a bebida!" });
+                    res.json({ status: "error", message: "Não foi possível excluir o professor!" });
                 } else {
-                    res.json({ status: "success", message: "Bebida excluída com sucesso!", data: result });
+                    res.json({ status: "success", message: "Professor excluído com sucesso!", data: result });
                 }
             });
         }
     });
 });
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // LISTAR CATEGORIAS
-app.get("/api/categorias/listar", (req, res) => {
-    db.query("SELECT * FROM categorias", (err, result) => {
+app.get("/api/disciplinas/listar", (req, res) => {
+    db.query("SELECT * FROM disciplinas", (err, result) => {
         if (err) {
             console.log(err);
-            res.status(500).send("Erro ao listar categorias");
+            res.status(500).send("Erro ao listar disciplinas");
         } else {
             res.send(result);
         }
@@ -153,46 +155,43 @@ app.get("/api/categorias/listar", (req, res) => {
 });
 
 // ADICIONAR CATEGORIA
-app.post('/api/categorias/adicionar', (req, res) => {
+app.post('/api/disciplinas/adicionar', (req, res) => {
     const { nome } = req.body;
 
-    const query = "INSERT INTO categorias (nome) VALUES (?)";
+    const query = "INSERT INTO disciplinas (nome) VALUES (?)";
     db.query(query, [nome], (err, result) => {
         if (err) {
             console.log(err);
-            res.status(500).send("Erro ao adicionar categoria");
+            res.status(500).send("Erro ao adicionar disciplina");
         } else {
-            res.json({ status: "success", message: "Categoria adicionada com sucesso" });
+            res.json({ status: "success", message: "Disciplina adicionada com sucesso" });
         }
     });
 });
 
-// EDITAR CATEGORIA
-app.put('/api/categorias/editar/:id', (req, res) => {
+// EDITAR disciplina
+app.put('/api/disciplinas/editar/:id', (req, res) => {
     const { id } = req.params;
-    const { nome } = req.body;
-    console.log('Editar categoria:', id);
-    console.log('Novo nome:', nome);
-    
-    const query = "UPDATE categorias SET nome = ? WHERE id = ?";
-    db.query(query, [nome, id], (err, result) => {
+    const { nome, periodo, carga_horaria, professor_id } = req.body;    
+    const query = "UPDATE disciplinas SET nome = ?, periodo = ?, carga_horaria = ?, professor_id = ? WHERE id = ?";
+    db.query(query, [nome, periodo, carga_horaria, professor_id, id], (err, result) => {
         if (err) {
             console.log(err);
-            res.status(500).send("Erro ao editar categoria");
+            res.status(500).send("Erro ao editar disciplina");
         } else {
-            res.json({ status: "success", message: "Categoria editada com sucesso" });
+            res.json({ status: "success", message: "Disciplina editada com sucesso" });
         }
     });
 });
 
-// VISUALIZAR CATEGORIA
-app.get('/api/categorias/visualizar/:id', (req, res) => {
+// VISUALIZAR disciplina
+app.get('/api/disciplinas/visualizar/:id', (req, res) => {
     const { id } = req.params;
-    const query = "SELECT * FROM categorias WHERE id = ?";
+    const query = "SELECT * FROM disciplinas WHERE id = ?";
     db.query(query, [id], (err, result) => {
         if (err) {
             console.log(err);
-            res.status(500).send("Erro ao visualizar categoria");
+            res.status(500).send("Erro ao visualizar disciplina");
         } else {
             if (result.length === 0) {
                 res.status(404).send("Categoria não encontrada");
@@ -204,41 +203,28 @@ app.get('/api/categorias/visualizar/:id', (req, res) => {
 });
 
 // DELETAR CATEGORIA
-app.delete('/api/categorias/:id', (req, res) => {
+app.delete('/api/disciplinas/:id', (req, res) => {
     const { id } = req.params;
-    const queryDelete = "DELETE FROM categorias WHERE id = ?";
-    const querySelectAll = "SELECT * FROM categorias";
+    const queryDelete = "DELETE FROM disciplinas WHERE id = ?";
+    const querySelectAll = "SELECT * FROM disciplinas";
 
     db.query(queryDelete, [id], (err, result) => {
         if (err) {
             console.log(err);
-            res.json({ status: "error", message: "Não foi possível excluir a categorias!" });
+            res.json({ status: "error", message: "Não foi possível excluir a disciplinas!" });
         } else {
             db.query(querySelectAll, (err, result) => {
                 if (err) {
                     console.log(err);
-                    res.json({ status: "error", message: "Não foi possível excluir a categorias!" });
+                    res.json({ status: "error", message: "Não foi possível excluir a disciplinas!" });
                 } else {
-                    res.json({ status: "success", message: "Categoria excluída com sucesso!", data: result});
+                    res.json({ status: "success", message: "Disciplina excluída com sucesso!", data: result});
                 }
             });
         }
     });
 });
-
-app.post('/api/categorias/adicionar', (req, res) => {
-    const { nome } = req.body;
-
-    const query = "INSERT INTO categorias (nome) VALUES (?)";
-    db.query(query, [nome], (err, result) => {
-        if (err) {
-            console.log(err);
-            res.status(500).send("Erro ao adicionar categoria");
-        } else {
-            res.json({ status: "success", message: "Categoria adicionada com sucesso" });
-        }
-    });
-});
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 app.listen(PORT, () => {
     console.log(`Servidor Express iniciado na porta ${PORT}`);
